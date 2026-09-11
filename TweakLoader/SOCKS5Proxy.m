@@ -186,14 +186,10 @@ static void load_proxy_config(void) {
         }
 
         for (NSDictionary *p in (NSArray *)json) {
-            NSString *pid = [p[@"id"] description];
-            // UUID may be encoded as string
-            if (p[@"id"] && ![pid isEqualToString:proxyId]) {
-                // try uppercase/lowercase match
-                if ([pid caseInsensitiveCompare:proxyId] != NSOrderedSame) {
-                    continue;
-                }
-            } else if (!p[@"id"]) {
+            id rawId = p[@"id"];
+            if (!rawId) continue;
+            NSString *pid = [rawId isKindOfClass:[NSString class]] ? (NSString *)rawId : [rawId description];
+            if ([pid caseInsensitiveCompare:proxyId] != NSOrderedSame) {
                 continue;
             }
 
