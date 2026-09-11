@@ -218,6 +218,8 @@
 				SOCKS5Proxy.m,
 				TweakLoader.m,
 				"UIKit+GuestHooks.m",
+				fishhook.c,
+				fishhook.h,
 			);
 			target = 174140392D9C0D0000F3F928 /* TweakLoader */;
 		};
