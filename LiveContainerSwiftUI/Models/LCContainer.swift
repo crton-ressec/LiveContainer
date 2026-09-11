@@ -27,6 +27,10 @@ class LCContainer : ObservableObject, Hashable {
         }
     }
     public var spoofedIdentifier: String?
+    
+    /// Selected SOCKS5 proxy ID (from LCProxyManager). nil = no proxy.
+    @Published var proxyId: String?
+    
     private var infoDict : [String:Any]?
     public var containerURL : URL {
         if let resolvedContainerURL {
@@ -66,7 +70,7 @@ class LCContainer : ObservableObject, Hashable {
         }
     }
     
-    init(folderName: String, name: String, isShared : Bool, isolateAppGroup: Bool = false, spoofIdentifierForVendor: Bool = false, bookmarkData: Data? = nil, resolvedContainerURL: URL? = nil) {
+    init(folderName: String, name: String, isShared : Bool, isolateAppGroup: Bool = false, spoofIdentifierForVendor: Bool = false, bookmarkData: Data? = nil, resolvedContainerURL: URL? = nil, proxyId: String? = nil) {
         self.folderName = folderName
         self.name = name
         self.isShared = isShared
@@ -74,6 +78,7 @@ class LCContainer : ObservableObject, Hashable {
         self.spoofIdentifierForVendor = spoofIdentifierForVendor
         self.storageBookMark = bookmarkData
         self.resolvedContainerURL = resolvedContainerURL
+        self.proxyId = proxyId
     }
     
     convenience init(infoDict : [String : Any], isShared : Bool) {
@@ -85,7 +90,8 @@ class LCContainer : ObservableObject, Hashable {
                   isolateAppGroup: false,
                   spoofIdentifierForVendor: false,
                   bookmarkData: bookmarkData,
-                  resolvedContainerURL: nil
+                  resolvedContainerURL: nil,
+                  proxyId: nil
         )
         
         if let bookmarkData {
@@ -114,6 +120,7 @@ class LCContainer : ObservableObject, Hashable {
                 isolateAppGroup = plistInfo["isolateAppGroup"] as? Bool ?? false
                 spoofIdentifierForVendor = plistInfo["spoofIdentifierForVendor"] as? Bool ?? false
                 spoofedIdentifier = plistInfo["spoofedIdentifierForVendor"] as? String
+                proxyId = plistInfo["proxyId"] as? String
             }
         } catch {
             
@@ -142,6 +149,9 @@ class LCContainer : ObservableObject, Hashable {
         if let spoofedIdentifier {
             infoDict!["spoofedIdentifierForVendor"] = spoofedIdentifier
         }
+        if let proxyId {
+            infoDict!["proxyId"] = proxyId
+        }
         
         do {
             let fm = FileManager.default
@@ -158,6 +168,9 @@ class LCContainer : ObservableObject, Hashable {
     
     func reloadInfoPlist() {
         infoDict = NSDictionary(contentsOf: infoDictUrl) as? [String : Any]
+        if let infoDict {
+            proxyId = infoDict["proxyId"] as? String
+        }
     }
 
     func loadName() {
@@ -169,6 +182,7 @@ class LCContainer : ObservableObject, Hashable {
         isolateAppGroup = infoDict["isolateAppGroup"] as? Bool ?? false
         spoofIdentifierForVendor = infoDict["spoofIdentifierForVendor"] as? Bool ?? false
         spoofedIdentifier = infoDict["spoofedIdentifierForVendor"] as? String
+        proxyId = infoDict["proxyId"] as? String
     }
     
     static func == (lhs: LCContainer, rhs: LCContainer) -> Bool {
