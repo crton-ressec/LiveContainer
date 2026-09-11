@@ -6,6 +6,29 @@ brew install ldid
 # move lc to working folder
 mv "$archive_path.xcarchive/Products/Applications" Payload
 
+# Strip existing code signatures so Scarlet / SideStore / AltStore can resign cleanly
+echo "Stripping code signatures..."
+find Payload -type d -name "_CodeSignature" -print -exec rm -rf {} + 2>/dev/null || true
+find Payload -name "embedded.mobileprovision" -print -delete 2>/dev/null || true
+
+# Ad-hoc sign with ldid (empty entitlements first; sideloaders re-apply real ones)
+if command -v ldid >/dev/null 2>&1; then
+  echo "Ad-hoc signing with ldid..."
+  # Main binary
+  MAIN_APP=$(find Payload -maxdepth 2 -name "*.app" | head -1)
+  if [ -n "$MAIN_APP" ]; then
+    EXEC=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$MAIN_APP/Info.plist" 2>/dev/null || true)
+    if [ -n "$EXEC" ] && [ -f "$MAIN_APP/$EXEC" ]; then
+      ldid -S "$MAIN_APP/$EXEC" || true
+    fi
+    # Nested frameworks, dylibs, appex
+    find "$MAIN_APP" -type f \( -name "*.dylib" -o -perm -111 \) ! -name "*.png" ! -name "*.car" 2>/dev/null | while read -r bin; do
+      file "$bin" 2>/dev/null | grep -q "Mach-O" && ldid -S "$bin" 2>/dev/null || true
+    done
+  fi
+fi
+
+
 # temporarily move sidestore support framrwork to tmp before zip
 mkdir tmp
 mv Payload/LiveContainer.app/Frameworks/SideStoreSupport.framework ./tmp
