@@ -7,6 +7,19 @@ brew install ldid
 mv "$archive_path.xcarchive/Products/Applications" Payload
 
 # Strip existing code signatures so Scarlet / SideStore / AltStore can resign cleanly
+
+# Ensure CFBundleExecutable matches the real binary name (LiveContainer)
+MAIN_APP=$(find Payload -maxdepth 2 -name "*.app" | head -1)
+if [ -n "$MAIN_APP" ]; then
+  if [ -f "$MAIN_APP/LiveContainer" ] && [ ! -f "$MAIN_APP/LiveProxy" ]; then
+    /usr/libexec/PlistBuddy -c 'Set :CFBundleExecutable LiveContainer' "$MAIN_APP/Info.plist" 2>/dev/null || true
+  fi
+  if [ -f "$MAIN_APP/LiveProxy" ] && [ ! -f "$MAIN_APP/LiveContainer" ]; then
+    /usr/libexec/PlistBuddy -c 'Set :CFBundleExecutable LiveProxy' "$MAIN_APP/Info.plist" 2>/dev/null || true
+  fi
+  /usr/libexec/PlistBuddy -c 'Set :CFBundleDisplayName LiveProxy' "$MAIN_APP/Info.plist" 2>/dev/null || true
+fi
+
 echo "Stripping code signatures..."
 find Payload -type d -name "_CodeSignature" -print -exec rm -rf {} + 2>/dev/null || true
 find Payload -name "embedded.mobileprovision" -print -delete 2>/dev/null || true
