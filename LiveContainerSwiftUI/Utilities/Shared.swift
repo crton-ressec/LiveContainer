@@ -94,10 +94,13 @@ class SharedModel: ObservableObject {
     public static let keychainAccessGroupCount = 128
     
     func updateMultiLCStatus() {
-        if LCUtils.appUrlScheme()?.lowercased() != "livecontainer" {
-            multiLCStatus = 2
-        } else {
+        // Primary schemes for this fork (LiveProxy). Stock LiveContainer uses "livecontainer".
+        let scheme = LCUtils.appUrlScheme()?.lowercased() ?? ""
+        let primarySchemes: Set<String> = ["liveproxy", "livecontainer"]
+        if primarySchemes.contains(scheme) {
             multiLCStatus = 0
+        } else {
+            multiLCStatus = 2
         }
     }
     
