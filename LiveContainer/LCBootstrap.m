@@ -668,7 +668,7 @@ int LiveContainerMain(int argc, char *argv[]) {
     lcSharedDefaults = [[NSUserDefaults alloc] initWithSuiteName: [LCSharedUtils appGroupID]];
     lcAppUrlScheme = NSBundle.mainBundle.infoDictionary[@"CFBundleURLTypes"][0][@"CFBundleURLSchemes"][0];
     lcAppGroupPath = [[NSFileManager.defaultManager containerURLForSecurityApplicationGroupIdentifier:[NSClassFromString(@"LCSharedUtils") appGroupID]] path];
-    isLiveProcess = [lcAppUrlScheme isEqualToString:@"liveprocess"];
+    isLiveProcess = [lcAppUrlScheme isEqualToString:@"liveproxyprocess"];
     setenv("LC_HOME_PATH", getenv("HOME"), 0);
 
     NSString *selectedApp = [lcUserDefaults stringForKey:@"selected"];
@@ -752,12 +752,12 @@ int LiveContainerMain(int argc, char *argv[]) {
     }
     NSString* runningLC = [LCSharedUtils getContainerUsingLCSchemeWithFolderName:selectedContainer];
     // if another instance is running, we just switch to that one, these should be called after uiapplication initialized
-    // however if the running lc is liveprocess and current lc is livecontainer1 we just continue
+    // however if the running lc is liveproxyprocess and current lc is livecontainer1 we just continue
     if(selectedApp && runningLC) {
         [lcUserDefaults removeObjectForKey:@"selected"];
         [lcUserDefaults removeObjectForKey:@"selectedContainer"];
         
-        if([runningLC hasSuffix:@"liveprocess"]) {
+        if([runningLC hasSuffix:@"liveproxyprocess"]) {
             runningLC = runningLC.stringByDeletingPathExtension;
         }
         

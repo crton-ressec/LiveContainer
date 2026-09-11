@@ -67,11 +67,11 @@ static id SSSceneObserver;
 @implementation NSBundle(SideStoreHooks)
 
 + (NSString*)hook_appbundleIdentifier {
-    return @"com.kdt.livecontainer";
+    return @"com.crton.liveproxy";
 }
 
 + (NSString*)hook_storeAppBundleIdentifier {
-    return @"com.kdt.livecontainer";
+    return @"com.crton.liveproxy";
 }
 
 - (NSString*)hook_altstoreAppGroup {

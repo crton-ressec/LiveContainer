@@ -215,6 +215,7 @@
 			membershipExceptions = (
 				DocumentPicker.m,
 				Notification.m,
+				SOCKS5Proxy.m,
 				TweakLoader.m,
 				"UIKit+GuestHooks.m",
 			);

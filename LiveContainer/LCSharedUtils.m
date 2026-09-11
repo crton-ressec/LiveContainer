@@ -399,7 +399,7 @@ NSString* FBSOpenApplicationOptionKeyPayloadURL = @"__PayloadURL";
 }
 
 + (NSArray<NSString*>*)lcUnorderedUrlSchemes {
-    NSArray<NSString *> *defaultSchemes = @[@"livecontainer", @"livecontainer2", @"livecontainer3"];
+    NSArray<NSString *> *defaultSchemes = @[@"liveproxy", @"liveproxy2", @"liveproxy3"];
     return defaultSchemes;
 }
 

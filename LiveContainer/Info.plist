@@ -5,7 +5,7 @@
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDisplayName</key>
-	<string>LiveContainer</string>
+	<string>LiveProxy</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -20,7 +20,7 @@
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>LiveContainer</string>
+	<string>LiveProxy</string>
 	<key>CFBundleIconName</key>
 	<string>AppIcon</string>
 	<key>CFBundleIconUsesAutomaticDarkModeVariant</key>
@@ -30,7 +30,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>LiveContainer</string>
+	<string>LiveProxy</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -41,10 +41,10 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>com.kdt.livecontainer.urlscheme</string>
+			<string>com.kdt.liveproxy.urlscheme</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>livecontainer</string>
+				<string>liveproxy</string>
 			</array>
 		</dict>
 	</array>
@@ -72,9 +72,9 @@
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>sidestore</string>
-		<string>livecontainer</string>
-		<string>livecontainer2</string>
-		<string>livecontainer3</string>
+		<string>liveproxy</string>
+		<string>liveproxy2</string>
+		<string>liveproxy3</string>
 	</array>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
