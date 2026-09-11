@@ -26,6 +26,7 @@ struct LCContainerView : View {
     @StateObject private var removeContainerAlert = YesNoHelper()
     @StateObject private var deleteDataAlert = YesNoHelper()
     @StateObject private var removeKeychainAlert = YesNoHelper()
+    @ObservedObject private var proxyManager = LCProxyManager.shared
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var sharedModel : SharedModel
     @State private var typingContainerName : String = ""
@@ -112,6 +113,43 @@ struct LCContainerView : View {
                                 }
                         }
                     }
+                }
+                
+                Section {
+                    Picker(selection: Binding(
+                        get: { container.proxyId ?? "" },
+                        set: { newValue in
+                            container.proxyId = newValue.isEmpty ? nil : newValue
+                            saveContainer()
+                        }
+                    )) {
+                        Text("None").tag("")
+                        ForEach(proxyManager.proxies) { proxy in
+                            Text(proxy.name).tag(proxy.id.uuidString)
+                        }
+                    } label: {
+                        Text("Proxy")
+                    }
+                    
+                    if let proxy = proxyManager.proxy(withIdString: container.proxyId) {
+                        HStack {
+                            Text("Server")
+                            Spacer()
+                            Text(proxy.displaySubtitle)
+                                .foregroundStyle(.secondary)
+                                .multilineTextAlignment(.trailing)
+                        }
+                    }
+                    
+                    NavigationLink {
+                        LCProxiesView()
+                    } label: {
+                        Text("Manage Proxies")
+                    }
+                } header: {
+                    Text("Proxy")
+                } footer: {
+                    Text("Route this container's network traffic through a SOCKS5 proxy. Add proxies in Settings → Proxies.")
                 }
 
                 Section {
